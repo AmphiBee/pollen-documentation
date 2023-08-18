@@ -45,3 +45,19 @@ return [
     ],
 ];
 ```
+
+Instead of using the configuration file to define post types, you can also use the fluent PostType class. This method is more readable and provides an object-oriented approach to declaratively set post types in a "fluent" manner.
+
+Each method has been designed to be easy to write and interpret. They are based on the naming conventions of WordPress content type parameters and the Extended CPT package. Additional methods have been introduced to enhance the understanding of their role.
+
+Here's an example:
+
+```php
+PostType::make('form-submission', 'Form Submission', 'Form Submissions')
+    ->titlePlaceholder('The custom title placeholder')
+    ->private()
+    ->chronological()
+    ->showInAdminBar();
+```
+
+In the given example, we're creating a custom post type with the slug 'form-submission', the singular label 'Form Submission', and the plural label 'Form Submissions'. We specify that the title placeholder field contains 'The custom title placeholder', that the content type is private, ordered chronologically, and should be displayed in the admin menu bar. Expressive, isn't it? :)

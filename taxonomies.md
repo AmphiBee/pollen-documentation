@@ -24,3 +24,19 @@ return [
 ```
 
 All [parameters available in Extended CPTs](https://github.com/johnbillion/extended-cpts/wiki/Registering-taxonomies) are supported.
+
+Rather than relying on the configuration file to define taxonomies, consider using the Taxonomy class which offers a streamlined, object-oriented approach. This method presents a clearer way of defining taxonomies in a fluent style.
+
+The methods integrated within this class were crafted for simplicity in both writing and comprehension. They resonate with the conventions set by WordPress for taxonomy parameters and are influenced by the Extended CPT package. Additional methods are in place to provide further clarity regarding their purpose.
+
+Here's a demonstration:
+
+```php
+Taxonomy::make('product_cat', 'Product Category', 'Product Categories')
+    ->showInQuickEdit()
+    ->showTagcloud()
+    ->sort()
+    ->showInAdminBar();
+```
+
+In this example, we're establishing a custom taxonomy with the slug 'product_cat', a singular label of 'Product Category', and a plural label of 'Product Categories'. Further configurations indicate that it should appear in quick edits, be part of the tag cloud, have sorting capabilities, and be visible in the admin menu bar. A neat way to express taxonomy configurations, right? :)

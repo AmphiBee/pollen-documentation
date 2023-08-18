@@ -19,16 +19,7 @@ Lifecycle hooks
 
 Hookable classes are not automatically enlisted in the application lifecycle. Whenever a new hookable class is created, it needs to be registered in the `config/app.php` file within its `hooks` property. You will see that the standard classes are already registered when you examine the file.
 
-Basic hookable class
-----------------------------
-
-To create a new hookable class, the `make:hook` command can be utilized:
-
-```php
-php artisan make:hook MyHook
-```
-
-This command will create a new class and save it in the `app/Hooks` folder of your application:
+Here is an example of a hookable class :
 
 ```php
 <?php
