@@ -1,6 +1,6 @@
 # Ajax
 
-The `Ajax` facae simplifies the management of AJAX calls in your Laravel application by providing a simple and configurable abstraction.
+The `Ajax` facade simplifies the management of AJAX calls in your Laravel application by providing a simple and configurable abstraction.
 
 The `Ajax` class allows you to manage AJAX calls using chainable configuration methods.
 
