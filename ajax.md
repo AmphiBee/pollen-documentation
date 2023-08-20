@@ -45,8 +45,7 @@ Here's a complete example of using the `Ajax` class:
 ```php
 $response = Ajax::listen('my_action', function () {
     // AJAX handling logic here
-})->forLoggedUsers()
-->execute();
+})->forLoggedUsers();
 ```
 
 The above example configures an action, a callback, and target users, and then executes the AJAX call. The server response is stored in the `$response` variable.
