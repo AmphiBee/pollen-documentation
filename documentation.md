@@ -1,0 +1,8 @@
+- [Installation](/docs/{{version}}/installation)
+- [Getting Started](/docs/{{version}}/getting-started)
+- [Hooks](/docs/{{version}}/hooks)
+- [Post Types](/docs/{{version}}/post-types)
+- [Taxonomies](/docs/{{version}}/taxonomies)
+- [Ajax](/docs/{{version}}/ajax)
+- [Assets](/docs/{{version}}/assets)
+- [Creating a theme](/docs/{{version}}/theming)
