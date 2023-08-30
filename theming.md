@@ -87,7 +87,7 @@ Both are supported and work as they would with a standard WordPress theme, but w
 
 ### Theme Class Methods
 
-Here are some useful methods provided by the `Theme` class:
+Here are some useful methods provided by the `Theme` facade:
 
 ```php
 // Set the active theme

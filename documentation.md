@@ -1,6 +1,8 @@
 - [Installation](/docs/{{version}}/installation)
 - [Getting Started](/docs/{{version}}/getting-started)
 - [Routing](/docs/{{version}}/routing)
+- [Middleware](/docs/{{version}}/middleware)
+- [Controllers](/docs/{{version}}/controllers)
 - [Hooks](/docs/{{version}}/hooks)
 - [Post Types](/docs/{{version}}/post-types)
 - [Taxonomies](/docs/{{version}}/taxonomies)
