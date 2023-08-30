@@ -5,4 +5,5 @@
 - [Taxonomies](/docs/{{version}}/taxonomies)
 - [Ajax](/docs/{{version}}/ajax)
 - [Assets](/docs/{{version}}/assets)
+- [Auth](/docs/{{version}}/auth)
 - [Creating a theme](/docs/{{version}}/theming)
