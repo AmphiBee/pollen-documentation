@@ -1,5 +1,6 @@
 - [Installation](/docs/{{version}}/installation)
 - [Getting Started](/docs/{{version}}/getting-started)
+- [Routing](/docs/{{version}}/routing)
 - [Hooks](/docs/{{version}}/hooks)
 - [Post Types](/docs/{{version}}/post-types)
 - [Taxonomies](/docs/{{version}}/taxonomies)
