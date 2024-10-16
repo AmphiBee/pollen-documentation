@@ -40,3 +40,7 @@ Taxonomy::make('product_cat', 'Product Category', 'Product Categories')
 ```
 
 In this example, we're establishing a custom taxonomy with the slug 'product_cat', a singular label of 'Product Category', and a plural label of 'Product Categories'. Further configurations indicate that it should appear in quick edits, be part of the tag cloud, have sorting capabilities, and be visible in the admin menu bar. A neat way to express taxonomy configurations, right? :)
+
+### Important: Use of the Service Provider
+
+It is essential that the declaration of taxonomies is not done in a **Hookable** class but rather in a **Service Provider**. The service provider is responsible for attaching the taxonomy declaration via the WordPress `init` hook. If the declaration is made in a hookable class without using a service provider, the taxonomy arguments might not be properly registered.

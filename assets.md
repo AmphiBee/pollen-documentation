@@ -118,3 +118,7 @@ Asset::add('plugin/legacy-script', 'js/legacy.js')
 ```
 
 This allows for consistent asset management across your entire WordPress setup, regardless of whether you're using ViteJS or traditional asset inclusion methods.
+
+### Important: Use of the Service Provider
+
+It is essential to declare assets in a **Service Provider** rather than a **Hookable** class. The service provider ensures the assets are properly enqueued via the WordPress `wp_enqueue_scripts` hook. If the declaration is made within a hookable class without using a service provider, the assets might not be enqueued as expected.

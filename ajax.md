@@ -49,3 +49,7 @@ $response = Ajax::listen('my_action', function () {
 ```
 
 The above example configures an action, a callback, and target users, and then executes the AJAX call. The server response is stored in the `$response` variable.
+
+### Important: Automatic Hook Declaration
+
+By default, this will automatically declare hooks on the WordPress actions `wp_ajax_{action}` and/or `wp_ajax_nopriv_{action}`. This ensures the proper routing of the AJAX request based on the user's login status.

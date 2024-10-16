@@ -1,16 +1,16 @@
 # Custom Post Types
 
-The `config/post-types.php` file serves to create your own post types.
+The `config/post-types.php` file allows you to create your own custom post types.
 
-Pollen integrates the [Extended CPTs](https://github.com/johnbillion/extended-cpts) library and a post types service provider. This setup allows you to configure post types directly from a config file.
+Pollen integrates the [Extended CPTs](https://github.com/johnbillion/extended-cpts) library and a dedicated post types service provider. This setup allows you to configure post types directly from a config file.
 
-By default, there is a post type called `supplier`. You can delete it or replace it with a type that better suits your needs.
+By default, there is a post type called `supplier`. You can delete or replace it with a type that better suits your needs.
 
-All [parameters proposed by Extended CPTs](https://github.com/johnbillion/extended-cpts/wiki/Registering-Post-Types) can be used. An example post type included in Pollen demonstrates how to change the names associated with `singular`, `plural`, and `slug`.
+All [parameters provided by Extended CPTs](https://github.com/johnbillion/extended-cpts/wiki/Registering-Post-Types) can be used. An example post type included in Pollen demonstrates how to change the names associated with `singular`, `plural`, and `slug`.
 
 ## Creating Multiple Custom Post Types
 
-To create multiple custom post types, add new keys to the `post_types` array in the `config/post-types.php` file. The example below illustrates the creation of two post types: `supplier` and `book`.
+To create multiple custom post types, simply add new keys to the `post_types` array in the `config/post-types.php` file. The example below illustrates the creation of two post types: `supplier` and `book`.
 
 ```php
 return [
@@ -46,9 +46,11 @@ return [
 ];
 ```
 
-Instead of using the configuration file to define post types, you can also use the fluent PostType class. This method is more readable and provides an object-oriented approach to declaratively set post types in a "fluent" manner.
+## Using the PostType Class
 
-Each method has been designed to be easy to write and interpret. They are based on the naming conventions of WordPress content type parameters and the Extended CPT package. Additional methods have been introduced to enhance the understanding of their role.
+Instead of using the configuration file, you can also use the fluent PostType class. This approach is more readable and provides an object-oriented method to declaratively set post types.
+
+Each method has been designed to be easy to write and understand, based on the naming conventions of WordPress parameters and the Extended CPT package. Additional methods have been introduced to enhance clarity.
 
 Here's an example:
 
@@ -60,4 +62,8 @@ PostType::make('form-submission', 'Form Submission', 'Form Submissions')
     ->showInAdminBar();
 ```
 
-In the given example, we're creating a custom post type with the slug 'form-submission', the singular label 'Form Submission', and the plural label 'Form Submissions'. We specify that the title placeholder field contains 'The custom title placeholder', that the content type is private, ordered chronologically, and should be displayed in the admin menu bar. Expressive, isn't it? :)
+In this example, we're creating a post type with the slug `form-submission`, the singular label `Form Submission`, and the plural label `Form Submissions`. We specify a custom title placeholder, mark the post type as private, order it chronologically, and display it in the admin menu bar.
+
+### Important: Use of the Service Provider
+
+It is essential that the declaration of post types is not done in a **Hookable** class but rather in a **Service Provider**. The service provider is responsible for attaching the post type declaration via the WordPress `init` hook. If the declaration is made in a hookable class without using a service provider, the post type arguments might not be properly registered.
