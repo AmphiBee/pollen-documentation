@@ -1,18 +1,15 @@
 # Assets Management
 
-The `Asset` class provides a streamlined way to manage the inclusion of CSS styles and JavaScript scripts in WordPress, with support for ViteJS integration and Asset Containers.
+The Pollen framework provides a powerful asset management system with support for ViteJS integration and Asset Containers.
 
 ## Basic Usage
-
 The `Asset` class simplifies adding CSS and JavaScript assets with chainable methods:
-
 ```php
 $css = Asset::add('my-theme', 'css/screen.min.css')
     ->dependencies(['bootstrap'])
     ->version('1.0')
     ->media('all')
     ->toFrontend();
-
 $js = Asset::add('theme-script', 'js/mythemescript.js')
     ->dependencies(['jquery'])
     ->version('1.0')
@@ -20,7 +17,6 @@ $js = Asset::add('theme-script', 'js/mythemescript.js')
     ->loadStrategy('defer')
     ->toFrontend()
     ->localize('myData', ['key' => 'value']);
-```
 
 ## Asset Containers
 
@@ -31,41 +27,57 @@ Asset Containers allow you to group and manage assets with specific configuratio
 You can configure Asset Containers in your service provider or configuration file:
 
 ```php
-app('asset.container')->addContainer('plugin', [
-    'hot_file' => public_path('plugin.hot'),
-    'build_directory' => 'build/plugin',
-    'manifest_path' => public_path('build/plugin/manifest.json'),
-    'base_path' => 'wp-content/plugins/your-plugin'
+app('asset.container')->addContainer('my-plugin', [
+    'hot_file' => public_path("my-plugin.hot"),
+    'build_directory' => "build/my-plugin",
+    'manifest_path' => public_path("build/my-plugin/manifest.json"),
+    'base_path' => '',
+    'asset_dir' => [
+        'root' => 'assets',
+        'images' => 'images',
+        'fonts' => 'fonts',
+        'css' => 'css',
+        'js' => 'js',
+    ]
 ]);
 ```
 
 ### Using Asset Containers
 
-Specify a container when adding an asset:
+The framework automatically sets up a default container for the active theme. You can reference assets using Vite macros:
 
 ```php
-Asset::add('plugin/stylesheet', 'assets/css/app.css')
-    ->container('plugin')
-    ->toBackend();
+use Illuminate\Support\Facades\Vite;
+
+// Reference an image
+$imageUrl = Vite::image('logo.png');
+
+// Reference a CSS file
+$cssUrl = Vite::css('app.css');
+
+// Reference a JavaScript file
+$jsUrl = Vite::js('app.js');
+
+// Reference a font file
+$fontUrl = Vite::font('myfont.woff2');
 ```
 
-## Theme Asset Management
+### Specifying Asset Containers
 
-The `ThemeManager` class provides a method `asset()` for managing theme-specific assets:
+You can specify a different asset container by passing its slug as the second parameter to the Vite macros:
 
 ```php
-use Pollen\Support\Facades\Theme;
+// Reference an image from a specific asset container
+$imageUrl = Vite::image('logo.png', 'plugin-assets');
 
-// Get the URL for a theme asset
-$assetUrl = Theme::asset('images/logo.png');
+// Reference a CSS file from a specific asset container
+$cssUrl = Vite::css('app.css', 'admin-assets');
 
-// Get the URL for a specific asset type
-$cssUrl = Theme::asset('styles.css', 'css');
-$jsUrl = Theme::asset('script.js', 'js');
-$fontUrl = Theme::asset('font.woff', 'fonts');
+// Reference a JavaScript file from a specific asset container
+$jsUrl = Vite::js('app.js', 'frontend-assets');
 ```
 
-The `asset()` method automatically applies the correct asset directory configuration based on the asset type.
+This allows you to manage assets from different sources (e.g., themes, plugins, admin area) separately and efficiently.
 
 ## ViteJS Integration
 
@@ -137,6 +149,8 @@ Asset::add('plugin/legacy-script', 'js/legacy.js')
 
 This allows for consistent asset management across your entire WordPress setup, regardless of whether you're using ViteJS or traditional asset inclusion methods.
 
-### Important: Use of the Service Provider
+## Important: Use of the Service Provider
 
-It is essential to declare assets in a **Service Provider** rather than a **Hookable** class. The service provider ensures the assets are properly enqueued via the WordPress `wp_enqueue_scripts` hook. If the declaration is made within a hookable class without using a service provider, the assets might not be enqueued as expected.
+It is essential to declare assets in a **Service Provider** rather than a **Hookable** class. The service provider ensures the assets are properly enqueued via the WordPress `wp_enqueue_scripts` hook.
+
+By following these guidelines, you can ensure consistent and efficient asset management across your entire WordPress setup, leveraging the power of ViteJS and Pollen's asset management system.

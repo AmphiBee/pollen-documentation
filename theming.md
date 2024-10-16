@@ -213,59 +213,45 @@ return [
 ];
 ```
 
-This configuration is used by the `Theme::asset()` method to locate assets correctly.
+This configuration is used by the asset management system to locate assets correctly.
 
 ### Using Theme Assets
 
-The `asset()` method allows you to easily reference theme assets:
-
-```php
-use Pollen\Support\Facades\Theme;
-
-// Get the URL for an image in the theme
-$logoUrl = Theme::asset('logo.png', 'images');
-
-// Get the URL for a CSS file
-$styleUrl = Theme::asset('app.css', 'css');
-
-// Get the URL for a JavaScript file
-$scriptUrl = Theme::asset('app.js', 'js');
-```
-
-### Vite Macros for Theme Assets
-
-The `ThemeServiceProvider` defines several Vite macros that utilize the `asset_dir` configuration to easily access theme assets. These macros provide a convenient way to reference different types of assets in your theme:
-
-#### Available Macros
+The framework automatically sets up a default container for the active theme. You can reference assets using Vite macros:
 
 - `Vite::image()`: For referencing image assets
 - `Vite::font()`: For referencing font assets
 - `Vite::css()`: For referencing CSS assets
 - `Vite::js()`: For referencing JavaScript assets
 
-#### Usage
-
-You can use these macros in your Blade templates or PHP code to generate URLs for your theme assets:
+Each of these macros need asecond parameter filled the theme asset container slug (`theme`)
 
 ```php
-// In a Blade template
-<img src="{{ Vite::image('logo.png') }}" alt="Logo">
-<link rel="stylesheet" href="{{ Vite::css('app.css') }}">
-<script src="{{ Vite::js('app.js') }}"></script>
+use Illuminate\Support\Facades\Vite;
 
-// In PHP code
-$logoUrl = Vite::image('logo.png');
-$fontUrl = Vite::font('myfont.woff2');
-$styleUrl = Vite::css('styles.css');
-$scriptUrl = Vite::js('script.js');
+// Get the URL for an image in the theme
+$logoUrl = Vite::image('logo.png', 'theme');
+
+// Get the URL for a CSS file
+$styleUrl = Vite::css('app.css', 'theme');
+
+// Get the URL for a JavaScript file
+$scriptUrl = Vite::js('app.js', 'theme');
+
+// Get the URL for a font file
+$fontUrl = Vite::font('myfont.woff2', 'theme');
 ```
 
-These macros internally use the `ThemeManager::asset()` method, applying the correct asset type and directory structure based on your theme's `asset_dir` configuration.
+These macros automatically use the correct asset directory based on your theme's configuration.
 
-#### Benefits
+#### Usage in Blade Templates
 
-- Simplified asset referencing in your theme
-- Automatic application of the correct asset directory based on asset type
-- Seamless integration with Vite and your theme's asset structure
+You can use these macros in your Blade templates:
 
-By using these macros, you ensure that your asset references are consistent with your theme's configuration and take advantage of Vite's asset handling capabilities.
+```php
+<img src="{{ Vite::image('logo.png', 'theme') }}" alt="Logo">
+<link rel="stylesheet" href="{{ Vite::css('app.css', 'theme') }}">
+<script src="{{ Vite::js('app.js', 'theme') }}"></script>
+```
+
+These macros ensure that your asset references are consistent with your theme's configuration and take advantage of Vite's asset handling capabilities.
