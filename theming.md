@@ -120,10 +120,45 @@ Pollen's `ThemeManager` offers several useful methods for managing themes:
 - `Theme::active()`: Returns the name of the active theme
 - `Theme::parent()`: Returns the name of the parent theme (if it's a child theme)
 - `Theme::path($path)`: Generates the full path to a file in the active theme
+- `Theme::asset($path, $assetType = '')`: Retrieves the URL for a theme asset
 
-## Parent Theme Hierarchy
+### Using Theme Assets
 
-Pollen supports parent themes. You can specify a parent theme in your theme's configuration, and Pollen will automatically load resources from the parent theme if they are not found in the child theme.
+The `asset()` method allows you to easily reference theme assets:
+
+```php
+use Pollen\Support\Facades\Theme;
+
+// Get the URL for an image in the theme
+$logoUrl = Theme::asset('logo.png', 'images');
+
+// Get the URL for a CSS file
+$styleUrl = Theme::asset('app.css', 'css');
+
+// Get the URL for a JavaScript file
+$scriptUrl = Theme::asset('app.js', 'js');
+```
+
+This method uses the asset directory configuration specified in your theme's `config.php` file.
+
+## Asset Directory Configuration
+
+In your theme's `config.php` file, you can specify the directory structure for different asset types:
+
+```php
+return [
+    // ... autres configurations ...
+    'asset_dir' => [
+        'root' => 'assets',
+        'images' => 'images',
+        'fonts' => 'fonts',
+        'css' => 'css',
+        'js' => 'js',
+    ],
+];
+```
+
+This configuration is used by the `Theme::asset()` method to locate assets correctly.
 
 ## Localization
 
@@ -159,113 +194,78 @@ Commands needs to be run inside the theme folder.
 
 The Pollen framework offers a powerful and flexible theme system, integrating modern tools like Vite and TailwindCSS. By following these guidelines, you can create robust and maintainable WordPress themes.
 
+## Asset Management
 
+### Asset Directory Configuration
 
-
-# Creating a Theme
-
-Creating a custom theme in this package is incredibly easy, thanks to the adapted [qirolab/laravel-themer](https://github.com/qirolab/laravel-themer) package.
-
-## Generating a New Theme
-
-To generate a new theme, run the following command:
-
-```bash
-php artisan theme:make
-```
-
-You'll be prompted to answer several questions to configure your theme. Optionally, you can define the theme's slug right away:
-
-```bash
-php artisan theme:make {theme-name}
-```
-
-## Update package.json
-
-After the theme is generated, add these lines to the `package.json` located at the root of your Laravel installation:
-
-```json
-"scripts": {
-  // ...
-  "dev:{theme-name}": "vite --config themes/{theme-name}/vite.config.js",
-  "build:{theme-name}": "vite build --config themes/{theme-name}/vite.config.js"
-}
-```
-
-> **Note:** Currently, all themes rely on the Laravel installation's Node modules. Future versions will consider isolated Node modules for each theme.
-
-## Theme Architecture
-
-Your theme will have the following architecture:
-
-```plaintext
-theme-name/
-├─ config/
-│  ├─ gutenberg.php
-│  ├─ images.php
-│  ├─ menus.php
-│  ├─ providers.php
-│  ├─ sidebars.php
-│  ├─ supports.php
-│  ├─ templates.php
-├─ css/
-│  ├─ app.css
-├─ js/
-│  ├─ app.js
-│  ├─ bootstrap.js
-├─ views/
-│  ├─ example.blade.php
-│  ├─ layouts/
-│  ├─ parts/
-│  ├─ patterns/
-│  ├─ home.blade.php
-│  ├─ page.blade.php
-│  ├─ post.blade.php
-├─ index.php
-├─ style.css
-├─ tailwind.config.js
-├─ theme.json
-├─ vite.config.json
-```
-
-### File Explanation
-
-- **config/gutenberg.php**: Defines settings related to the Gutenberg editor.
-- **config/images.php**: Defines image thumbnail formats.
-- **config/menus.php**: Defines WordPress menu zones.
-- **config/providers.php**: Registers theme-specific service providers.
-- **config/sidebars.php**: Defines WordPress widget areas.
-- **config/supports.php**: Enables various WordPress theme features.
-- **config/templates.php**: Allows setting of WordPress page templates.
-- **css/**: Holds theme styles.
-- **js/**: Contains theme-specific JavaScript files.
-- **views/**: Contains Blade views, which are also available in Gutenberg editor.
-
-### ViteJS Configuration
-
-You may need to adapt the ViteJS configuration depending on your development environment. Refer to the Laravel Vite documentation [here](https://laravel.com/docs/10.x/vite#configuring-vite).
-
-### Parent and Child Themes
-
-Both are supported and work as they would with a standard WordPress theme, but with Blade for views.
-
-### Theme Class Methods
-
-Here are some useful methods provided by the `Theme` facade:
+In your theme's `config.php` file, you can specify the directory structure for different asset types:
 
 ```php
-// Set the active theme
-Theme::set('theme-name');
-
-// Get the current active theme
-Theme::active();
-
-// Get the current parent theme
-Theme::parent();
-
-// Clear the active theme
-Theme::clear();
-
-// Get theme path
-Theme::path($path = 'views'); // Returns the path to the active theme's views
+return [
+    // ... autres configurations ...
+    'asset_dir' => [
+        'root' => 'assets',
+        'images' => 'images',
+        'fonts' => 'fonts',
+        'css' => 'css',
+        'js' => 'js',
+    ],
+];
 ```
+
+This configuration is used by the `Theme::asset()` method to locate assets correctly.
+
+### Using Theme Assets
+
+The `asset()` method allows you to easily reference theme assets:
+
+```php
+use Pollen\Support\Facades\Theme;
+
+// Get the URL for an image in the theme
+$logoUrl = Theme::asset('logo.png', 'images');
+
+// Get the URL for a CSS file
+$styleUrl = Theme::asset('app.css', 'css');
+
+// Get the URL for a JavaScript file
+$scriptUrl = Theme::asset('app.js', 'js');
+```
+
+### Vite Macros for Theme Assets
+
+The `ThemeServiceProvider` defines several Vite macros that utilize the `asset_dir` configuration to easily access theme assets. These macros provide a convenient way to reference different types of assets in your theme:
+
+#### Available Macros
+
+- `Vite::image()`: For referencing image assets
+- `Vite::font()`: For referencing font assets
+- `Vite::css()`: For referencing CSS assets
+- `Vite::js()`: For referencing JavaScript assets
+
+#### Usage
+
+You can use these macros in your Blade templates or PHP code to generate URLs for your theme assets:
+
+```php
+// In a Blade template
+<img src="{{ Vite::image('logo.png') }}" alt="Logo">
+<link rel="stylesheet" href="{{ Vite::css('app.css') }}">
+<script src="{{ Vite::js('app.js') }}"></script>
+
+// In PHP code
+$logoUrl = Vite::image('logo.png');
+$fontUrl = Vite::font('myfont.woff2');
+$styleUrl = Vite::css('styles.css');
+$scriptUrl = Vite::js('script.js');
+```
+
+These macros internally use the `ThemeManager::asset()` method, applying the correct asset type and directory structure based on your theme's `asset_dir` configuration.
+
+#### Benefits
+
+- Simplified asset referencing in your theme
+- Automatic application of the correct asset directory based on asset type
+- Seamless integration with Vite and your theme's asset structure
+
+By using these macros, you ensure that your asset references are consistent with your theme's configuration and take advantage of Vite's asset handling capabilities.

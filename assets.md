@@ -49,6 +49,24 @@ Asset::add('plugin/stylesheet', 'assets/css/app.css')
     ->toBackend();
 ```
 
+## Theme Asset Management
+
+The `ThemeManager` class provides a method `asset()` for managing theme-specific assets:
+
+```php
+use Pollen\Support\Facades\Theme;
+
+// Get the URL for a theme asset
+$assetUrl = Theme::asset('images/logo.png');
+
+// Get the URL for a specific asset type
+$cssUrl = Theme::asset('styles.css', 'css');
+$jsUrl = Theme::asset('script.js', 'js');
+$fontUrl = Theme::asset('font.woff', 'fonts');
+```
+
+The `asset()` method automatically applies the correct asset directory configuration based on the asset type.
+
 ## ViteJS Integration
 
 To use ViteJS for asset management:
