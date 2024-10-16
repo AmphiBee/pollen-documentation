@@ -1,25 +1,57 @@
-Hookable Hooks
-==================
+# Hookable Hooks
 
 - [Overview](#overview)
 - [Lifecycle hooks](#lifecycle-hooks)
+- [Hookable declaration](#hookable-declaration)
 - [Basic hookable class](#basic-hookable-class)
 - [Hookable action](#hookable-action)
 - [Hookable filter](#hookable-filter)
+- [Singleton access](#singleton-access)
 
-Overview
---------
+## Overview
 
 The "hookable" class is a concept created by the [Themosis Framework](https://framework.themosis.com). In lieu of plugins for adding functionalities to your WordPress application, "hookable" classes can be utilized.
 
-Coding within an "hookable" class provides access to all APIs specified by WordPress and your application packages. By default, "hookable" classes are initiated right before mu-plugins. The class code can also be executed at a specific WordPress action or filter hook with a defined priority.
+Coding within a "hookable" class provides access to all APIs specified by WordPress and your application packages. By default, "hookable" classes are initiated right before `mu-plugins`. The class code can also be executed at a specific WordPress action or filter hook with a defined priority.
 
-Lifecycle hooks
--------------------
+## Lifecycle hooks
 
-Hookable classes are not automatically enlisted in the application lifecycle. Whenever a new hookable class is created, it needs to be registered in the `config/app.php` file within its `hooks` property. You will see that the standard classes are already registered when you examine the file.
+Hookable classes are not automatically enlisted in the application lifecycle. Whenever a new hookable class is created, it needs to be registered in the `config/app.php` file within the `hooks` property or in the `bootstrap/hooks.php` file. Both locations are merged into the application lifecycle during boot, ensuring that all declared hooks are properly loaded.
 
-Here is an example of a hookable class :
+## Hookable declaration
+
+
+### Declaring hooks in `bootstrap/hooks.php` (recommended)
+
+In addition to `config/app.php`, hookable classes can also be registered in the `bootstrap/hooks.php` file. The hooks declared in this file are merged with those in `config/app.php`. Here's an example of how to declare a hookable class in the `bootstrap/hooks.php` file:
+
+```php
+// bootstrap/hooks.php
+return [
+    App\Hooks\MySecondHook::class,
+];
+```
+
+### Declaring hooks in `config/app.php`
+
+To register a hookable class, you need to declare it in the `hooks` property of the `config/app.php` file. Here is an example of how to declare a hookable class in this file:
+
+```php
+// config/app.php
+return [
+    // other configurations
+
+    'hooks' => [
+        App\Hooks\MyHook::class,
+    ],
+];
+```
+
+Both files will be merged during the boot process, allowing you to register hooks in either or both locations.
+
+## Basic hookable class
+
+Here is an example of a hookable class:
 
 ```php
 <?php
@@ -40,20 +72,13 @@ class MyHook extends Hookable
 }
 ```
 
-Incorporate your code within the `register` method. After adding your code, you still need to register the hookable class in the `hooks` property of the `config/app.php` file like this:
+Once you have created the class, you must register it by adding it either to the `hooks` property in `config/app.php` or in the `bootstrap/hooks.php` file.
 
-```php
-'hooks' => [
-    App\Hooks\MyHook::class
-]
-```
+## Hookable action
 
-Hookable action
----------------------------
+A particular WordPress action hook can also be designated to delay the execution of a hookable class. For instance, the code within the `register` method may need to be executed only when WordPress triggers the `init` action.
 
-A particular WordPress action hook can also be designated to delay the execution of an hookable class. For instance, the code within the `register` method may need to be executed only when WordPress triggers the `init` action.
-
-To accomplish this, you just have to define a `$hook` instance property in your class and assign it the value of one of the WordPress action hooks:
+To accomplish this, you just need to define a `$hook` instance property in your class and assign it the value of one of the WordPress action hooks:
 
 ```php
 <?php
@@ -76,7 +101,7 @@ class MyFirstHook extends Hookable
 }
 ```
 
-Additionally, an execution priority can be established by setting the `$priority` property as follows:
+Additionally, an execution priority can be established by setting the `$priority` property:
 
 ```php
 <?php
@@ -101,16 +126,13 @@ class MyFirstHook extends Hookable
 }
 ```
 
-Hookable classes are solely utilized at the application root. They serve as the entryway to WordPress APIs. When developing custom plugins or working within a theme, hookable classes are unnecessary as all WordPress APIs are already loaded.
+### Registering hookable actions
 
-For executing some code at a specific action, simply use the Action class or the Filter class.
+Hookable classes must be registered in `config/app.php` or `bootstrap/hooks.php`. Once registered, they will be loaded into the application lifecycle and triggered at the appropriate time.
 
-Hookable filter
---------------------------------
+## Hookable filter
 
-Since filters employ the same API internally, some code can also be executed on any WordPress filters. Your filter logic should be defined within the `register()` method of the hookable class, much like an action. The difference is that the register method now receives filter parameters as arguments and requires a return value.
-
-Here is an example of a filter on the `the_content` hook:
+Filters work similarly to actions, but the `register()` method receives parameters and must return a value. This is common for modifying data like content output. For example, here's how you might define a hookable class for the `the_content` filter:
 
 ```php
 <?php
@@ -130,4 +152,18 @@ class ContentOverride extends Hookable
 }
 ```
 
-Lastly, register your filter in the `config/app.php` file, the same way as an action hook class.
+After defining the filter, remember to register it in `config/app.php` or `bootstrap/hooks.php`.
+
+## Singleton access
+
+For optimized access and lifecycle management, all hookable classes are loaded into the application through a singleton named `wp.hooks`. This singleton centralizes access to all registered hooks from both the `bootstrap/hooks.php` and `config/app.php` files.
+
+You can access the hooks through the singleton as follows:
+
+```php
+$hooks = app('wp.hooks');
+```
+
+This singleton ensures that all hooks are loaded once and are available globally throughout the application. The `wp.hooks` singleton merges hooks from both `bootstrap/hooks.php` and `config/app.php`, providing a unified interface for managing hooks within your application.
+
+By centralizing hooks in a singleton, your application benefits from a streamlined access pattern and reduced duplication of configuration logic.
